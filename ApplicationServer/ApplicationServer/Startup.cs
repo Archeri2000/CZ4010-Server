@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApplicationServer.Database;
 using ApplicationServer.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,9 +34,10 @@ namespace ApplicationServer
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApplicationServer", Version = "v1" });
             });
+            services.AddHostedService<DbMigratorHostedService>();
             services.AddDbContext<CoreDbContext>(options =>
                 options.UseNpgsql(Environment.GetEnvironmentVariable("CONNECTION_STRING") ??
-                                  throw new ApplicationException("No Connection String Specified!")));
+                                  "Postgres"));
             services.AddMemoryCache();
             services.AddSingleton<IdentityRepository>();
             services.AddScoped<SharingRepository>();

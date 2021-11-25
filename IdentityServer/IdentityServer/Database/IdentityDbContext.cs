@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using IdentityServer.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace IdentityServer
 {
@@ -15,6 +16,17 @@ namespace IdentityServer
         {
             modelBuilder.Entity<IdentityModel>().HasKey(x => x.TaggedUsername);
             modelBuilder.Entity<IdentityModel>().OwnsOne(x => x.PublicKey);
+        }
+    }
+    
+    public class IdentityContextFactory : IDesignTimeDbContextFactory<IdentityDbContext>
+    {
+        public IdentityDbContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<IdentityDbContext>();
+            optionsBuilder.UseNpgsql("Postgres");
+
+            return new IdentityDbContext(optionsBuilder.Options);
         }
     }
 }

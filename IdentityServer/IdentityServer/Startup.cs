@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,7 +17,6 @@ using Microsoft.OpenApi.Models;
 namespace IdentityServer
 {
     
-    //TODO: Add auto migration
     public class Startup
     {
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
@@ -35,12 +35,12 @@ namespace IdentityServer
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "IdentityServer", Version = "v1" });
-            }); 
-
+            });
+            services.AddHostedService<DbMigratorHostedService>();
             services.AddDbContext<IdentityDbContext>(options =>
                 options.UseNpgsql(
                     Environment.GetEnvironmentVariable("CONNECTION_STRING")
-                    ?? throw new ApplicationException("No connection string specified")));
+                    ?? "Postgres"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
