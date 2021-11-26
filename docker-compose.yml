@@ -33,6 +33,7 @@ services:
       - ASPNETCORE_HTTP_PORT=80
       - ASPNETCORE_Environment=Development
       - CONNECTION_STRING=Host=postgres-application;Port=5432;Database=postgres;Username=user;Password=securepassword
+      - IDENTITY_SERVER_HOST=identity:80
   postgres-application:
     image: postgres
     environment:

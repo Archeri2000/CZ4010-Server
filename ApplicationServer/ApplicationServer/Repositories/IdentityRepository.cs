@@ -1,9 +1,13 @@
 using System;
 using System.Net.Http;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ApplicationServer.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 
 namespace ApplicationServer.Repositories
 {
@@ -13,11 +17,12 @@ namespace ApplicationServer.Repositories
 
         private HttpClient _client = new HttpClient();
         
-        private const string IdentityServerAddress = "identity";
+        private readonly string IdentityServerAddress = Environment.GetEnvironmentVariable("IDENTITY_SERVER_HOST")??"identity";
 
         public IdentityRepository(IMemoryCache cache)
         {
             _cache = cache;
+            
         }
 
         private readonly MemoryCacheEntryOptions _options = new MemoryCacheEntryOptions
@@ -29,12 +34,12 @@ namespace ApplicationServer.Repositories
         public async Task<RSAPubKey> GetPublicKey(string taggedUsername)
         {
             if (_cache.TryGetValue(taggedUsername, out RSAPubKey pubKey)) return pubKey;
+            taggedUsername = UrlEncoder.Default.Encode(taggedUsername);
             var response =
-                await _client.GetAsync(
-                    $"http://{IdentityServerAddress}/Identity/GetIdentity?taggedUsername=\"{taggedUsername}\"");
+                await _client.GetAsync($"http://{IdentityServerAddress}/Identity/GetIdentity?taggedUsername={taggedUsername}");
             if (!response.IsSuccessStatusCode) return null;
-            var stream = await response.Content.ReadAsStreamAsync();
-            var key = await JsonSerializer.DeserializeAsync<RSAPubKey>(stream);
+            var array = await response.Content.ReadAsByteArrayAsync();
+            var key = JsonSerializer.Deserialize<RSAPubKey>(array);
             _cache.Set(taggedUsername, pubKey, _options);
             return key;
         }
