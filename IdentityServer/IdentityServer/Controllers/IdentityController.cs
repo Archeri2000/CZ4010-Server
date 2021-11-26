@@ -12,11 +12,6 @@ namespace IdentityServer.Controllers
     [Route("[controller]")]
     public class IdentityController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly IdentityDbContext _dbContext;
 
         public IdentityController(IdentityDbContext dbContext)
@@ -33,7 +28,7 @@ namespace IdentityServer.Controllers
         [HttpPost("CreateIdentity")]
         public async Task<ActionResult<CreateIdentityResponse>> CreateIdentity([FromBody] CreateIdentitySignedRequest request)
         {
-            if (!VerifyRequest(request)) return Unauthorized();
+            if (!VerifyRequest(request)) return Unauthorized(request.Request.ToBytes());
             var taggedUsername = request.Request.Username + GenerateTag();
             while (await _dbContext.Identities.AnyAsync(x => x.TaggedUsername == taggedUsername))
             {

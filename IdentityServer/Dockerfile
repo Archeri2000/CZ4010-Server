@@ -1,13 +1,13 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:5.0 as builder
+FROM mcr.microsoft.com/dotnet/sdk:6.0 as builder
 WORKDIR /app
 
-COPY ./ApplicationServer/IdentityServer.csproj ./Server/IdentityServer.csproj
+COPY ./IdentityServer/IdentityServer.csproj ./Server/IdentityServer.csproj
 WORKDIR ./Server
 RUN dotnet restore
 COPY ./IdentityServer .
 RUN dotnet publish -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 ENV ASPNETCORE_ENVIRONMENT Production
 ENV ASPNETCORE_URLS http://+
 ENV ASPNETCORE_HTTP_PORT 81
