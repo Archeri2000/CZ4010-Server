@@ -18,7 +18,7 @@ namespace ApplicationServer.Repositories
         
         public async Task<string> GetEncryptedKey(string url, string taggedUsername)
         {
-            var key = await _dbContext.sharing
+            var key = await _dbContext.Sharing
                 .Where(x => x.URL == url && x.TaggedUsername == taggedUsername)
                 .Select(x => x.EncryptedKey)
                 .FirstOrDefaultAsync();
@@ -28,7 +28,7 @@ namespace ApplicationServer.Repositories
         public async Task<bool> CreateNewFileSharing(string url, string taggedUsername, string encryptedKey)
         {
             var line = new SharingDataModel(url, taggedUsername, true, encryptedKey);
-            _dbContext.sharing.Add(line);
+            _dbContext.Sharing.Add(line);
             await _dbContext.SaveChangesAsync();
             return true;
         }
@@ -39,7 +39,7 @@ namespace ApplicationServer.Repositories
             var lines = model.TaggedUsernamesToShareWith.Select(x =>
                 new SharingDataModel(model.URL, x.TaggedUsername, false, x.EncryptedKey))
                 .ToList();
-            await _dbContext.sharing.AddRangeAsync(lines);
+            await _dbContext.Sharing.AddRangeAsync(lines);
             await _dbContext.SaveChangesAsync();
             return lines.Select(x => x.TaggedUsername);
         }
@@ -47,7 +47,7 @@ namespace ApplicationServer.Repositories
         public async Task<IEnumerable<string>> RemoveEncryptedKeys(UnsharingFileRequest request)
         {
             if (!await IsOwner(request.URL, request.CallerTaggedUsername)) return null;
-            await _dbContext.sharing
+            await _dbContext.Sharing
                 .Where(x => x.URL == request.URL && request.TaggedUsernamesToRemove.Contains(x.TaggedUsername))
                 .DeleteAsync();
             return request.TaggedUsernamesToRemove;
@@ -56,13 +56,13 @@ namespace ApplicationServer.Repositories
         public async Task<bool> DeleteKeys(string url, string taggedUsername)
         {
             if (!await IsOwner(url, taggedUsername)) return false;
-            await _dbContext.sharing.Where(x => x.URL == url).DeleteAsync();
+            await _dbContext.Sharing.Where(x => x.URL == url).DeleteAsync();
             return true;
         }
 
         public async Task<bool> IsOwner(string url, string taggedUsername)
         {
-            var key = await _dbContext.sharing
+            var key = await _dbContext.Sharing
                 .Where(x => x.URL == url && x.TaggedUsername == taggedUsername)
                 .Select(x => x.IsOwner)
                 .FirstOrDefaultAsync();

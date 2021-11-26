@@ -21,7 +21,7 @@ namespace ApplicationServer.Repositories
         {
             var key = await _repository.GetEncryptedKey(request.Url, request.TaggedUsername);
             if (key is null) return null;
-            var file = await _dbContext.files.FindAsync(request.Url);
+            var file = await _dbContext.Files.FindAsync(request.Url);
             if (file is null) return null;
             return new GetFileResponse(file.EncryptedFile, key);
         }
@@ -30,7 +30,7 @@ namespace ApplicationServer.Repositories
         {
             var url = await GetNewURL();
             if (!await _repository.CreateNewFileSharing(url, request.TaggedUsername, request.EncryptedKey)) return null;
-            _dbContext.files.Add(new FileDataModel(url, request.EncryptedFile));
+            _dbContext.Files.Add(new FileDataModel(url, request.EncryptedFile));
             await _dbContext.SaveChangesAsync();
             return new SubmitFileResponse(url);
         }
@@ -38,7 +38,7 @@ namespace ApplicationServer.Repositories
         public async Task<bool> DeleteFile(DeleteFileRequest request)
         {
             if (!await _repository.DeleteKeys(request.URL, request.TaggedUsername)) return false;
-            await _dbContext.files.Where(x => x.URL == request.URL).DeleteAsync();
+            await _dbContext.Files.Where(x => x.URL == request.URL).DeleteAsync();
             return true;
         }
 
@@ -59,7 +59,7 @@ namespace ApplicationServer.Repositories
         private async Task<string> GetNewURL()
         {
             var url = GenerateURL();
-            while (await _dbContext.files.AnyAsync(x => x.URL == url))
+            while (await _dbContext.Files.AnyAsync(x => x.URL == url))
             {
                 url = GenerateURL();
             }

@@ -88,7 +88,7 @@ namespace ApplicationServer.Controllers
         private async Task<bool> CheckSignature(byte[] hash, byte[] signature,string taggedUsername)
         {
             var key = await _identity.GetPublicKey(taggedUsername);
-            if (key == null) return false;
+            if (key is null) return false;
             var rsa = RSA.Create();
             rsa.ImportParameters(key.ToRsaParams());
             var deformatter = new RSAPKCS1SignatureDeformatter();
