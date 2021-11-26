@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApplicationServer.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20211125161216_.")]
+    [Migration("20211126152848_.")]
     partial class _
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,7 +30,7 @@ namespace ApplicationServer.Migrations
 
                     b.HasKey("URL");
 
-                    b.ToTable("FileDataModel");
+                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("ApplicationServer.Models.SharingDataModel", b =>
@@ -49,7 +49,7 @@ namespace ApplicationServer.Migrations
 
                     b.HasKey("URL", "TaggedUsername");
 
-                    b.ToTable("SharingDataModel");
+                    b.ToTable("Sharing");
                 });
 #pragma warning restore 612, 618
         }

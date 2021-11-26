@@ -7,7 +7,7 @@ namespace ApplicationServer.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "FileDataModel",
+                name: "Files",
                 columns: table => new
                 {
                     URL = table.Column<string>(type: "text", nullable: false),
@@ -15,11 +15,11 @@ namespace ApplicationServer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FileDataModel", x => x.URL);
+                    table.PrimaryKey("PK_Files", x => x.URL);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SharingDataModel",
+                name: "Sharing",
                 columns: table => new
                 {
                     URL = table.Column<string>(type: "text", nullable: false),
@@ -29,17 +29,17 @@ namespace ApplicationServer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SharingDataModel", x => new { x.URL, x.TaggedUsername });
+                    table.PrimaryKey("PK_Sharing", x => new { x.URL, x.TaggedUsername });
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "FileDataModel");
+                name: "Files");
 
             migrationBuilder.DropTable(
-                name: "SharingDataModel");
+                name: "Sharing");
         }
     }
 }

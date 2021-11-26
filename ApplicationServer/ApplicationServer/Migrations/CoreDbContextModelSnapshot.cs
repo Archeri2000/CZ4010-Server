@@ -28,7 +28,7 @@ namespace ApplicationServer.Migrations
 
                     b.HasKey("URL");
 
-                    b.ToTable("FileDataModel");
+                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("ApplicationServer.Models.SharingDataModel", b =>
@@ -47,7 +47,7 @@ namespace ApplicationServer.Migrations
 
                     b.HasKey("URL", "TaggedUsername");
 
-                    b.ToTable("SharingDataModel");
+                    b.ToTable("Sharing");
                 });
 #pragma warning restore 612, 618
         }

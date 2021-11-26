@@ -6,8 +6,8 @@ namespace ApplicationServer
 {
     public class CoreDbContext: DbContext
     {
-        public readonly DbSet<FileDataModel> files;
-        public readonly DbSet<SharingDataModel> sharing;
+        public DbSet<FileDataModel> Files { get; set; }
+        public DbSet<SharingDataModel> Sharing { get; set; }
         
         public CoreDbContext(DbContextOptions<CoreDbContext> options):base(options)
         {
