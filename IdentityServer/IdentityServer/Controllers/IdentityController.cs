@@ -20,9 +20,10 @@ namespace IdentityServer.Controllers
         }
 
         [HttpGet("GetIdentity")]
-        public async Task<RSAPubKey> GetIdentity([FromQuery] string taggedUsername)
+        public async Task<ActionResult<RSAPubKey>> GetIdentity([FromQuery] string taggedUsername)
         {
-            return (await _dbContext.Identities.FindAsync(taggedUsername)).PublicKey;
+            var key = (await _dbContext.Identities.FindAsync(taggedUsername))?.PublicKey;
+            return key is not null? Ok(key) : NotFound();
         }
         
         [HttpPost("CreateIdentity")]
