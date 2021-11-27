@@ -34,6 +34,15 @@ namespace ApplicationServer.Repositories
             await _dbContext.SaveChangesAsync();
             return new SubmitFileResponse(url);
         }
+        
+        public async Task<UpdateFileResponse> UpdateFile(UpdateFileRequest request)
+        {
+            var (url, encryptedFile, taggedUsername) = request;
+            if (!await _repository.IsOwner(url, taggedUsername)) return null;
+            await _dbContext.Files.Where(x => x.URL == url)
+                .UpdateAsync(x => new FileDataModel(url, encryptedFile));
+            return new UpdateFileResponse(url);
+        }
 
         public async Task<bool> DeleteFile(DeleteFileRequest request)
         {

@@ -48,6 +48,18 @@ namespace ApplicationServer.Controllers
             if (res is null) return StatusCode(500);
             return Ok(res);
         }
+        
+        [HttpPut]
+        public async Task<ActionResult<SubmitFileResponse>> UpdateFile(UpdateFileSignedRequest request)
+        {
+            var (req, signature) = request;
+            var hash = req.GetSHA256();
+            if (!await CheckSignature(hash, Convert.FromBase64String(signature), req.TaggedUsername))
+                return Unauthorized();
+            var res = await _file.UpdateFile(req);
+            if (res is null) return StatusCode(500);
+            return Ok(res);
+        }
 
         [HttpDelete("file")]
         public async Task<ActionResult> DeleteFile([FromBody]DeleteFileSignedRequest request)
@@ -81,7 +93,7 @@ namespace ApplicationServer.Controllers
             if (!await CheckSignature(hash, Convert.FromBase64String(signature), req.CallerTaggedUsername))
                 return Unauthorized();
             var res = await _file.UnshareFile(req);
-            if (res is null) return StatusCode(500);
+            if (res is null) return NotFound();
             return Ok(res);
         }
 
