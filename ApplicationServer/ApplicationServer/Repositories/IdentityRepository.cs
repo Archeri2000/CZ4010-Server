@@ -40,7 +40,7 @@ namespace ApplicationServer.Repositories
             if (!response.IsSuccessStatusCode) return null;
             var array = await response.Content.ReadAsByteArrayAsync();
             var key = JsonSerializer.Deserialize<RSAPubKey>(array);
-            _cache.Set(taggedUsername, pubKey, _options);
+            _cache.Set(taggedUsername, key, _options);
             return key;
         }
     }
