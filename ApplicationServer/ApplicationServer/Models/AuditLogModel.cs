@@ -1,10 +1,12 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace ApplicationServer.Models
 {
     public class AuditLogModel
     {
+        public AuditLogModel(){}
         public AuditLogModel(string log, LogType type, string caller, DateTime timestamp, string url)
         {
             Log = log;
@@ -22,6 +24,9 @@ namespace ApplicationServer.Models
             Timestamp = DateTime.Now;
             URL = url;
         }
+        
+        [Key]
+        public Guid Id { get; set; }
 
         public string Log { get; set; }
         public LogType Type { get; set; }
