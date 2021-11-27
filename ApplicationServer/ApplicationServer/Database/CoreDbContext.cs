@@ -9,6 +9,8 @@ namespace ApplicationServer
         public DbSet<FileDataModel> Files { get; set; }
         public DbSet<SharingDataModel> Sharing { get; set; }
         
+        public DbSet<AuditLogModel> Logs { get; set; }
+        
         public CoreDbContext(DbContextOptions<CoreDbContext> options):base(options)
         {
         }

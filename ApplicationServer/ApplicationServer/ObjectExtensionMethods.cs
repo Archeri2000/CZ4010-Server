@@ -6,9 +6,13 @@ namespace ApplicationServer
 {
     public static class ObjectExtensionMethods
     {
+        public static string ToJson(this object x)
+        {
+            return JsonSerializer.Serialize(x);
+        }
         public static byte[] ToBytes(this object x)
         {
-            return Encoding.ASCII.GetBytes(JsonSerializer.Serialize(x));
+            return Encoding.ASCII.GetBytes(x.ToJson());
         }
 
         public static byte[] GetSHA256(this object x)
