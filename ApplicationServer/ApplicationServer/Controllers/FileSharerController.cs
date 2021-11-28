@@ -57,7 +57,7 @@ namespace ApplicationServer.Controllers
             return Ok(res);
         }
         
-        [HttpPut]
+        [HttpPut("file")]
         public async Task<ActionResult<SubmitFileResponse>> UpdateFile(UpdateFileSignedRequest request)
         {
             var (req, signature) = request;

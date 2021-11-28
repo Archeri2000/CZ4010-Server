@@ -40,7 +40,7 @@ namespace ApplicationServer.Repositories
             var (url, encryptedFile, taggedUsername) = request;
             if (!await _repository.IsOwner(url, taggedUsername)) return null;
             await _dbContext.Files.Where(x => x.URL == url)
-                .UpdateAsync(x => new FileDataModel(url, encryptedFile));
+                .UpdateAsync(x => new FileDataModel{EncryptedFile = encryptedFile});
             return new UpdateFileResponse(url);
         }
 
